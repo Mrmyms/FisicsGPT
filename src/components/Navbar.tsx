@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Compass, Rocket, Activity, Zap, Sun, Moon, RotateCcw, Share2, Download } from 'lucide-react';
+import { Compass, Rocket, Activity, Zap, Sun, Moon, RotateCcw, Download, QrCode } from 'lucide-react';
 import { InstallAppModal } from './InstallAppModal';
+import { ShareModal } from './ShareModal';
 
 export type ActiveModule = 'vectors' | 'projectile' | 'mru' | 'mrua';
 
@@ -21,6 +22,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
@@ -44,10 +46,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, []);
 
   const handleShare = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
-      alert('¡Enlace de la simulación copiado al portapapeles!');
-    }
+    setIsShareModalOpen(true);
   };
 
   return (
@@ -106,8 +105,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           <RotateCcw size={18} />
         </button>
 
-        <button className="btn-icon" onClick={handleShare} title="Compartir simulación">
-          <Share2 size={18} />
+        <button className="btn-icon" onClick={handleShare} title="Compartir y ver Código QR">
+          <QrCode size={18} />
         </button>
 
         <button className="btn-icon" onClick={onToggleTheme} title={isDarkMode ? 'Modo Claro' : 'Modo Oscuro'}>
@@ -121,6 +120,12 @@ export const Navbar: React.FC<NavbarProps> = ({
       onClose={() => setIsInstallModalOpen(false)}
       deferredPrompt={deferredPrompt}
       onInstalled={() => setIsInstalled(true)}
+    />
+
+    <ShareModal
+      isOpen={isShareModalOpen}
+      onClose={() => setIsShareModalOpen(false)}
+      url="https://fisics-gpt.vercel.app"
     />
   </>
   );
